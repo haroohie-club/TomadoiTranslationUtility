@@ -39,13 +39,13 @@ namespace HaruhiTomadoiCLI
 
             Dfi dfi = new(File.ReadAllBytes(_dfiFile));
 
-            byte[] img = File.ReadAllBytes(imgFile);
+            FileStream img = File.OpenRead(imgFile);
 
             if (Directory.Exists(_outputDirectory) && _force)
             {
                 Directory.Delete(_outputDirectory, true);
             }
-            else
+            else if (Directory.Exists(_outputDirectory))
             {
                 Console.WriteLine("ERROR: Directory is not empty!");
                 return 1;
@@ -68,32 +68,37 @@ namespace HaruhiTomadoiCLI
             return 0;
         }
 
-        private static int ExtractDfiDirectory(Dfi dfi, byte[] img, string directory, int dfiEntryIndex)
+        private static int ExtractDfiDirectory(Dfi dfi, FileStream img, string directory, int dfiEntryIndex)
         {
+            Console.WriteLine($"Extracting directory {dfi.Entries[dfiEntryIndex].Name}...");
             string directoryPath = Path.Combine(directory, dfi.Entries[dfiEntryIndex].Name);
             Directory.CreateDirectory(directoryPath);
 
-            int currentDfiIndex = dfiEntryIndex + 1;
-            for (int i = 1; i <= dfi.Entries[dfiEntryIndex].NumFiles; i++)
+            int i;
+            for (i = 1; i < dfi.Entries[dfiEntryIndex].NumFiles;)
             {
-                if (dfi.Entries[currentDfiIndex].Type == FileEntry.EntryType.DIRECTORY)
+                if (dfi.Entries[dfiEntryIndex + i].Type == FileEntry.EntryType.DIRECTORY)
                 {
-                    currentDfiIndex += ExtractDfiDirectory(dfi, img, directoryPath, dfiEntryIndex + i);
+                    i += ExtractDfiDirectory(dfi, img, directoryPath, dfiEntryIndex + i);
                 }
                 else
                 {
-                    ExtractDfiFile(dfi.Entries[currentDfiIndex], img, directoryPath);
-                    currentDfiIndex++;
+                    ExtractDfiFile(dfi.Entries[dfiEntryIndex + i], img, directoryPath);
+                    i++;
                 }
             }
 
-            return currentDfiIndex - dfiEntryIndex;
+            return i;
         }
 
-        private static void ExtractDfiFile(FileEntry dfiFileEntry, byte[] img, string directory)
+        private static void ExtractDfiFile(FileEntry dfiFileEntry, FileStream img, string directory)
         {
+            Console.WriteLine($"Extracting file {dfiFileEntry.Name}...");
             string filePath = Path.Combine(directory, dfiFileEntry.Name);
-            File.WriteAllBytes(filePath, img.Skip(dfiFileEntry.FileOffset).Take(dfiFileEntry.FileSize).ToArray());
+            byte[] buffer = new byte[dfiFileEntry.FileSize];
+            img.Seek(dfiFileEntry.FileOffset, SeekOrigin.Begin);
+            img.Read(buffer, 0, dfiFileEntry.FileSize);
+            File.WriteAllBytes(filePath, buffer);
         }
     }
 }

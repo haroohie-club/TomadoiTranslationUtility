@@ -53,5 +53,10 @@ namespace HaruhiTomadoiLib.Archive
             FileOffset = BitConverter.ToInt32(data.Skip(offset + 8).Take(4).ToArray()) * 0x800;
             FileSize = BitConverter.ToInt32(data.Skip(offset + 12).Take(4).ToArray());
         }
+
+        public override string ToString()
+        {
+            return $"{Type}: {Name}{(Type == EntryType.FILE ? $"({FileSize} bytes" : "")})";
+        }
     }
 }

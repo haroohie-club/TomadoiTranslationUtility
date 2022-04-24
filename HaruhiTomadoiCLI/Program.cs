@@ -1,12 +1,20 @@
-﻿using System;
+﻿using Mono.Options;
 
 namespace HaruhiTomadoiCLI
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            CommandSet commands = new("HaruhiTomadoiCLI")
+            {
+                "Usage: HaruhiTomadoiCLI COMMAND [OPTIONS]",
+                "",
+                "Available commands:",
+                new ExtractDfiCommand()
+            };
+
+            return commands.Run(args);
         }
     }
 }

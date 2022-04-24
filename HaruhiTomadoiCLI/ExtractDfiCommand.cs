@@ -3,7 +3,6 @@ using Mono.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace HaruhiTomadoiCLI
 {
@@ -54,7 +53,7 @@ namespace HaruhiTomadoiCLI
 
             for (int i = 1; i < dfi.Entries.Count;)
             {
-                if (dfi.Entries[i].Type == FileEntry.EntryType.DIRECTORY)
+                if (dfi.Entries[i].Type == DfiFileEntry.EntryType.DIRECTORY)
                 {
                     i += ExtractDfiDirectory(dfi, img, _outputDirectory, i);
                 }
@@ -77,7 +76,7 @@ namespace HaruhiTomadoiCLI
             int i;
             for (i = 1; i < dfi.Entries[dfiEntryIndex].NumFiles;)
             {
-                if (dfi.Entries[dfiEntryIndex + i].Type == FileEntry.EntryType.DIRECTORY)
+                if (dfi.Entries[dfiEntryIndex + i].Type == DfiFileEntry.EntryType.DIRECTORY)
                 {
                     i += ExtractDfiDirectory(dfi, img, directoryPath, dfiEntryIndex + i);
                 }
@@ -91,7 +90,7 @@ namespace HaruhiTomadoiCLI
             return i;
         }
 
-        private static void ExtractDfiFile(FileEntry dfiFileEntry, FileStream img, string directory)
+        private static void ExtractDfiFile(DfiFileEntry dfiFileEntry, FileStream img, string directory)
         {
             Console.WriteLine($"Extracting file {dfiFileEntry.Name}...");
             string filePath = Path.Combine(directory, dfiFileEntry.Name);

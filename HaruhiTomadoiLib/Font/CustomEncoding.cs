@@ -1,0 +1,40 @@
+﻿namespace HaruhiTomadoiLib.Font
+{
+    public class CustomEncoding
+    {
+        public Dictionary<short, string> Charset { get; set; } = new();
+
+        public CustomEncoding(string charsetCsv)
+        {
+            foreach (string line in File.ReadAllLines(charsetCsv))
+            {
+                if (string.IsNullOrEmpty(line))
+                {
+                    continue;
+                }
+
+                string[] split = line.Split(',');
+
+                Charset.Add(short.Parse(split[0]), split[1]);
+            }
+        }
+
+        public string GetString(IEnumerable<byte> bytes)
+        {
+            string result = "";
+            for (int i = 0; i < bytes.Count() - 1; i+= 2)
+            {
+                if (Charset.TryGetValue(BitConverter.ToInt16(bytes.Skip(i).Take(2).ToArray()), out string @char))
+                {
+                    result += @char;
+                }
+                else
+                {
+                    result += "@";
+                }
+            }
+
+            return result;
+        }
+    }
+}

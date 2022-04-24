@@ -10,7 +10,7 @@ namespace HaruhiTomadoiLib.Archive
     public class Dfi
     {
         public int Unknown1 { get; set; }
-        public List<FileEntry> Entries { get; set; } = new();
+        public List<DfiFileEntry> Entries { get; set; } = new();
 
         public Dfi(IEnumerable<byte> data)
         {
@@ -30,7 +30,7 @@ namespace HaruhiTomadoiLib.Archive
         }
     }
 
-    public class FileEntry
+    public class DfiFileEntry
     {
         public enum EntryType
         {
@@ -44,7 +44,7 @@ namespace HaruhiTomadoiLib.Archive
         public int FileOffset { get; set; }
         public int FileSize { get; set; }
 
-        public FileEntry(int offset, IEnumerable<byte> data)
+        public DfiFileEntry(int offset, IEnumerable<byte> data)
         {
             Type = (EntryType)BitConverter.ToInt16(data.Skip(offset).Take(2).ToArray());
             NumFiles = BitConverter.ToInt16(data.Skip(offset + 2).Take(2).ToArray());

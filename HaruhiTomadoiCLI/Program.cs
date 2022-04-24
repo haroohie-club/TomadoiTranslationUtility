@@ -11,7 +11,10 @@ namespace HaruhiTomadoiCLI
                 "Usage: HaruhiTomadoiCLI COMMAND [OPTIONS]",
                 "",
                 "Available commands:",
-                new ExtractDfiCommand()
+                new ExtractDfiCommand(),
+                new DecompressPackCommand(),
+                new UnpackBinCommand(),
+                new RelativeSearchCommand(),
             };
 
             return commands.Run(args);

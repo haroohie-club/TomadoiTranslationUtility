@@ -15,6 +15,7 @@ namespace HaruhiTomadoiCLI
                 new DecompressPackCommand(),
                 new UnpackBinCommand(),
                 new RelativeSearchCommand(),
+                new ExtractStringsCommand(),
             };
 
             return commands.Run(args);

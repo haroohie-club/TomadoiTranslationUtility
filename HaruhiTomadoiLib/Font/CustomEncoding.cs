@@ -15,7 +15,14 @@
 
                 string[] split = line.Split(',');
 
-                Charset.Add(short.Parse(split[0]), split[1]);
+                if (split.Length > 2)
+                {
+                    Charset.Add(short.Parse(split[2]), ",");
+                }
+                else
+                {
+                    Charset.Add(short.Parse(split[1]), split[0]);
+                }
             }
         }
 

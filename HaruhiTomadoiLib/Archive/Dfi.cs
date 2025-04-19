@@ -41,7 +41,7 @@ namespace HaruhiTomadoiLib.Archive
         public short NumFiles { get; set; }
         public int RelativeNameOffset { get; set; }
         public string Name { get; set; }
-        public int FileOffset { get; set; }
+        public uint FileOffset { get; set; }
         public int FileSize { get; set; }
 
         public DfiFileEntry(int offset, IEnumerable<byte> data)
@@ -50,7 +50,7 @@ namespace HaruhiTomadoiLib.Archive
             NumFiles = BitConverter.ToInt16(data.Skip(offset + 2).Take(2).ToArray());
             RelativeNameOffset = BitConverter.ToInt32(data.Skip(offset + 4).Take(4).ToArray());
             Name = Encoding.ASCII.GetString(data.Skip(offset + RelativeNameOffset).TakeWhile(b => b != 0x00).ToArray());
-            FileOffset = BitConverter.ToInt32(data.Skip(offset + 8).Take(4).ToArray()) * 0x800;
+            FileOffset = BitConverter.ToUInt32(data.Skip(offset + 8).Take(4).ToArray()) * 0x800;
             FileSize = BitConverter.ToInt32(data.Skip(offset + 12).Take(4).ToArray());
         }
 

@@ -15,7 +15,7 @@ public class ExtractDfiCommand : Command
     {
         Options = new()
         {
-            { "d|dfi=", "DFI to extract", d => _dfiFile = d },
+            { "d|i|dfi|input=", "DFI to extract", d => _dfiFile = d },
             { "o|output=", "Directory to extract to", o => _outputDirectory = o },
             { "f|force", "Overwrite an existing directory when extracting", f => _force = true },
         };
